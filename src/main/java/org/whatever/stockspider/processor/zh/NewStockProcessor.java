@@ -7,7 +7,9 @@ import com.alibaba.fastjson.JSONArray;
 import us.codecraft.webmagic.Page;
 
 /**
- *  新股Processor
+ * 新股Processor
+ *
+ * @author limingjian
  */
 @Component
 public class NewStockProcessor extends MyPageProcessor {
