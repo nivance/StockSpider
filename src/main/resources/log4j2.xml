@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch） -->
+            <ThresholdFilter level="debug" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] %logger{36} [%M] [%L] KEY:%X{TRACE_KEY} %msg%xEx%n"/>
+        </Console>
+
+        <RollingFile name="stock_log" fileName="logs/stock.log" filePattern="logs/stock-%d{yyyyMMdd}.log">
+            <ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [%logger{16}] [%M] [%L] KEY:%X{TRACE_KEY} %msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+        </RollingFile>
+
+        <RollingFile name="stock_error_log" fileName="logs/stock_error.log"
+                     filePattern="logs/stock-error-%d{yyyyMMdd}.log" immediateFlush="false">
+            <ThresholdFilter level="warn" onMatch="ACCEPT" onMismatch="DENY"/>
+            <PatternLayout
+                    pattern="%d{yyyy-MM-dd HH:mm:ss.SSS} [%t] [%-5level] [%logger{16}] [%M] [%L] KEY:%X{TRACE_KEY} %msg%n"/>
+            <Policies>
+                <OnStartupTriggeringPolicy/>
+                <TimeBasedTriggeringPolicy modulate="true" interval="1"/>
+            </Policies>
+        </RollingFile>
+    </appenders>
+
+    <Loggers>
+        <logger name="org.springframework" level="info"/>
+        <logger name="org.mybatis" level="info"/>
+        <Root level="debug">
+            <appender-ref ref="Console"/>
+            <appender-ref ref="stock_log"/>
+            <appender-ref ref="stock_error_log"/>
+        </Root>
+    </Loggers>
+</Configuration>
