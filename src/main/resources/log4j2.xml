@@ -32,7 +32,9 @@
 
     <Loggers>
         <logger name="org.springframework" level="info"/>
+        <logger name="org.apache" level="info"/>
         <logger name="org.mybatis" level="info"/>
+        <logger name="org.hibernate" level="info"/>
         <Root level="debug">
             <appender-ref ref="Console"/>
             <appender-ref ref="stock_log"/>
