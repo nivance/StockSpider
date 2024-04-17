@@ -45,10 +45,10 @@ public enum StockPrefix {
      * @param code
      * @return
      */
-    public static String toCode(String code) {
+    public static String toCodeAfter(String code) {
         Optional<StockPrefix> sp = Arrays.stream(StockPrefix.values()).filter(p -> p.getCodePrefixs().contains(code.substring(0, 2))).findFirst();
         if (sp.isPresent()) {
-            return sp.get().name() + code;
+            return code + "." + sp.get().name();
         }
         return null;
     }

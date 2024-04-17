@@ -1,10 +1,7 @@
 package org.whatever.stockspider.processor.zh;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-import org.whatever.stockspider.db.entity.CompanyInfo;
 import org.whatever.stockspider.db.entity.CompanyInfoWithBLOBs;
 import org.whatever.stockspider.processor.MyPageProcessor;
 
@@ -35,7 +32,8 @@ public class CompanyInfoProcessor extends MyPageProcessor {
         companyInfo.setLegalPerson(data.getString("LEGAL_PERSON"));
         companyInfo.setBusinessScope(data.getString("BUSINESS_SCOPE"));
         companyInfo.setCode(data.getString("STR_CODEA"));
-        companyInfo.setOrgProfile(data.getString("ORG_PROFILE").trim());
+        String profile = data.getString("ORG_PROFILE");
+        companyInfo.setOrgProfile(StringUtils.isEmpty(profile) ? null : profile.trim());
         companyInfo.setIndedirectors(data.getString("INDEDIRECTORS"));
         companyInfo.setIndustry(data.getString("EM2016"));
         companyInfo.setNation("CHN");
@@ -49,6 +47,9 @@ public class CompanyInfoProcessor extends MyPageProcessor {
         companyInfo.setRegNum(data.getString("REG_NUM"));
         companyInfo.setSecucode(data.getString("SECUCODE"));
         companyInfo.setSecurityType(data.getString("SECURITY_TYPE"));
+        if (StringUtils.isEmpty(companyInfo.getCode()) || companyInfo.getCode().startsWith("A")) {
+            companyInfo.setCode(companyInfo.getSecucode().substring(0, 6));
+        }
         page.putField("companyInfo", companyInfo);
     }
 
