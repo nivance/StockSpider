@@ -45,11 +45,15 @@ public class StockHisPriceSpider implements Spiderable {
         if (CollectionUtils.isEmpty(companyInfos)) {
             return new String[]{};
         }
-        long millis = System.currentTimeMillis();
-        return companyInfos.stream().map(c -> String.format(STOCK_HIS_PRICE_API_URL, millis, toMartetCode(c), millis)).toArray(String[]::new);
+        return companyInfos.stream().map(c -> getStockPriceApiUrl(c)).toArray(String[]::new);
     }
 
-    private String toMartetCode(CompanyInfo companyInfo) {
+    protected String getStockPriceApiUrl(CompanyInfo companyInfo) {
+        long millis = System.currentTimeMillis();
+        return String.format(STOCK_HIS_PRICE_API_URL, millis, toMartetCode(companyInfo), millis);
+    }
+
+    protected String toMartetCode(CompanyInfo companyInfo) {
         return companyInfo.getMarket() + "." + companyInfo.getCode();
     }
 }
