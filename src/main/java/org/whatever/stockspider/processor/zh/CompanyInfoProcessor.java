@@ -2,6 +2,7 @@ package org.whatever.stockspider.processor.zh;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.whatever.stockspider.constants.StockPrefix;
 import org.whatever.stockspider.db.entity.CompanyInfoWithBLOBs;
 import org.whatever.stockspider.processor.MyPageProcessor;
 
@@ -50,6 +51,7 @@ public class CompanyInfoProcessor extends MyPageProcessor {
         if (StringUtils.isEmpty(companyInfo.getCode()) || companyInfo.getCode().startsWith("A")) {
             companyInfo.setCode(companyInfo.getSecucode().substring(0, 6));
         }
+        companyInfo.setMarket(StockPrefix.getMarket(companyInfo.getCode()));
         page.putField("companyInfo", companyInfo);
     }
 
