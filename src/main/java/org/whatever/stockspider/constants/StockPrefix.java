@@ -77,4 +77,7 @@ public enum StockPrefix {
         return 0;
     }
 
+    public static String toMartetCode(String code) {
+        return getMarket(code) + "." + code;
+    }
 }

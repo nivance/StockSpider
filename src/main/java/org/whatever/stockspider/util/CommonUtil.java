@@ -1,9 +1,12 @@
 package org.whatever.stockspider.util;
 
 import java.io.UnsupportedEncodingException;
+import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.whatever.stockspider.db.entity.DayPrice;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -43,6 +46,31 @@ public class CommonUtil {
             }
         }
         return paramsMap;
+    }
+
+    /**
+     * 将字符串转换为Kline对象
+     *
+     * @param data 示例数据：2000-11-27,7.38,7.61,7.73,7.28,49762,37562000.00,6.06,2.56,0.19,0.00
+     * @return
+     */
+    public static DayPrice toObject(String code, String name, String data) {
+        String[] split = data.split(",");
+        DayPrice dayPrice = new DayPrice();
+        dayPrice.setCode(code);
+        dayPrice.setName(name);
+        dayPrice.setTradingDate(DateUtil.formatDate(split[0], DateUtil.FORMAT_3).toDate());
+        dayPrice.setOpeningPrice(new BigDecimal(split[1]));
+        dayPrice.setClosingPrice(new BigDecimal(split[2]));
+        dayPrice.setPeakPrice(new BigDecimal(split[3]));
+        dayPrice.setBottomPrice(new BigDecimal(split[4]));
+        dayPrice.setTradingVolume(Integer.valueOf(split[5]));
+        dayPrice.setTradingAmount(new BigDecimal(split[6]));
+        dayPrice.setAmplitudeRate(new BigDecimal(split[7]));
+        dayPrice.setChangeRate(new BigDecimal(split[8]));
+        dayPrice.setChangeAmount(new BigDecimal(split[9]));
+        dayPrice.setTurnoverRate(new BigDecimal(split[10]));
+        return dayPrice;
     }
 
 }
