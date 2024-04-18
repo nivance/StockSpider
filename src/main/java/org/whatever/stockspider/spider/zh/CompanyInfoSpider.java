@@ -39,7 +39,7 @@ public class CompanyInfoSpider implements Spiderable {
 
     @Override
     public void run() {
-        new Spider(companyInfoProcessor).addPipeline(companyInfoPipeline).addUrl(getUrls()).thread(8).run();
+        new Spider(companyInfoProcessor).addPipeline(companyInfoPipeline).addUrl(getUrls()).thread(4).run();
     }
 
     @Override

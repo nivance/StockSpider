@@ -8,6 +8,7 @@ import org.whatever.stockspider.processor.MyPageProcessor;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Page;
 
 /**
@@ -15,11 +16,14 @@ import us.codecraft.webmagic.Page;
  *
  * @author limingjian
  */
+@Slf4j
 @Component
 public class CompanyInfoProcessor extends MyPageProcessor {
 
     @Override
     public void process(Page page) {
+        String url = page.getRequest().getUrl();
+        log.info("爬取url={}", url);
         String pageString = page.getRawText();
         int startIndex = pageString.indexOf("[");
         int endIndex = pageString.lastIndexOf("]");

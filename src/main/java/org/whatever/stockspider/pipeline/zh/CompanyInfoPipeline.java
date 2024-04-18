@@ -40,6 +40,7 @@ public class CompanyInfoPipeline implements Pipeline {
         }
         try {
             stockService.updateCompanyInfo(companyInfo);
+            log.info("update companyInfo={}", companyInfo);
         } catch (Exception e) {
             log.error("{}", companyInfo, e);
         }
