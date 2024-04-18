@@ -9,8 +9,18 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class DateUtil {
     public static long DAY_MILLIS = 24 * 60 * 60 * 1000;
+
+    public static boolean isWeekend(long millis) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTimeInMillis(millis);
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        return dayOfWeek == Calendar.SATURDAY || dayOfWeek == Calendar.SUNDAY;
+    }
 
     /**
      * 获取上周日时间
