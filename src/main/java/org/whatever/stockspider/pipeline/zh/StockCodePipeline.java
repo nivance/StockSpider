@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.whatever.stockspider.db.entity.CompanyInfo;
 import org.whatever.stockspider.service.StockService;
 
@@ -24,10 +25,15 @@ public class StockCodePipeline implements Pipeline {
     @Autowired
     private StockService stockService;
 
-
     @Override
     public void process(ResultItems resultItems, Task task) {
         List<CompanyInfo> stockInfoList = resultItems.get("dataList");
+        String url = resultItems.getRequest().getUrl();
+        if (CollectionUtils.isEmpty(stockInfoList)) {
+            log.info("爬取url=[{}] 没有数据", url);
+            return;
+        }
         stockService.batchInsertCompanyInfo(stockInfoList);
+        log.info("爬取url=[{}]后更新{}条数据", url, stockInfoList.size());
     }
 }

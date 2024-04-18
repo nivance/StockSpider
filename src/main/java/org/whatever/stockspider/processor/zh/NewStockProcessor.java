@@ -13,6 +13,7 @@ import org.whatever.stockspider.util.DateUtil;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Page;
 
 /**
@@ -20,15 +21,19 @@ import us.codecraft.webmagic.Page;
  *
  * @author limingjian
  */
+@Slf4j
 @Component
 public class NewStockProcessor extends MyPageProcessor {
 
     @Override
     public void process(Page page) {
+        String url = page.getRequest().getUrl();
+        log.info("爬取url={}", url);
         String pageString = page.getRawText();
         int startIndex = pageString.indexOf("[");
         int endIndex = pageString.lastIndexOf("]");
         String jsonString = pageString.substring(startIndex, endIndex + 1);
+        log.info("新股爬取结果={}", jsonString);
         JSONArray dataList = JSONArray.parseArray(jsonString);
         List<CompanyInfo> companyInfos = new ArrayList<>();
         Date date = new Date();
