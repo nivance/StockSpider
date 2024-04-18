@@ -42,6 +42,7 @@ public class SpiderRunner implements ApplicationRunner {
      */
     @Scheduled(cron = "0 0 10 * * ?")
     public void newStock() {
+        log.info("----开始爬取新股");
         newStockSpider.run();
     }
 
@@ -53,6 +54,7 @@ public class SpiderRunner implements ApplicationRunner {
      */
     @Scheduled(cron = "0 0 12 * * ?")
     public void updateCompanyInfo() {
+        log.info("----开始更新公司信息");
         companyInfoSpider.run();
     }
 
@@ -64,6 +66,7 @@ public class SpiderRunner implements ApplicationRunner {
      */
     @Scheduled(cron = "0 30 15 * * ?")
     public void updateStockPrice() {
+        log.info("----开始更新今天行情数据");
         if (!DateUtil.isWeekend(System.currentTimeMillis())) {
             stockTodayPriceSpider.run();
         }
