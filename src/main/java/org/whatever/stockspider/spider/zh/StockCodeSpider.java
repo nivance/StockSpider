@@ -29,7 +29,7 @@ public class StockCodeSpider implements Spiderable {
 
     @Override
     public void run() {
-        new Spider(stockCodeProcessor).addPipeline(stockCodePipeline).addUrl(getUrls()).run();
+        new Spider(stockCodeProcessor).addPipeline(stockCodePipeline).addUrl(getUrls()).thread(8).run();
     }
 
     @Override
