@@ -25,38 +25,41 @@ create table day_price
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment='股票每日价格表';
 
 
--- 公司信息表
-drop table if exists company_info;
-create table company_info
+-- 公司信息表--
+-------------------------------
+-- Table structure for company_info
+-- ----------------------------
+DROP TABLE IF EXISTS `company_info`;
+CREATE TABLE `company_info`
 (
     ID               BIGINT(16) AUTO_INCREMENT COMMENT '自增主键',
-    CODE             VARCHAR(8)   NOT NULL DEFAULT '' COMMENT '股票代码',
-    NAME             VARCHAR(128) NOT NULL DEFAULT '' COMMENT '股票名称',
-    ORG_NAME         VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '公司名称',
+    CODE             VARCHAR(8)    NOT NULL DEFAULT '' COMMENT '股票代码',
+    NAME             VARCHAR(128)  NOT NULL DEFAULT '' COMMENT '股票名称',
+    ORG_NAME         VARCHAR(64)   NOT NULL DEFAULT '' COMMENT '公司名称',
     ORG_NAME_EN      VARCHAR(128)  NOT NULL DEFAULT '' COMMENT '公司英文名称',
-    ORG_PROFILE      TEXT         NOT NULL DEFAULT '' COMMENT '公司简介',
-    INDUSTRY         VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '所属东财行业',
+    ORG_PROFILE      TEXT          NOT NULL COMMENT '公司简介',
+    INDUSTRY         VARCHAR(64)   NOT NULL DEFAULT '' COMMENT '所属东财行业',
     ORG_TEL          VARCHAR(128)  NOT NULL DEFAULT '' COMMENT '公司联系电话',
-    ORG_WEB          VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '公司网站',
-    PROVINCE         VARCHAR(8)   NOT NULL DEFAULT '' COMMENT '区域',
-    REG_ADDRESS      VARCHAR(256) NOT NULL DEFAULT '' COMMENT '注册地址',
-    ADDRESS          VARCHAR(256) NOT NULL DEFAULT '' COMMENT '公司地址',
+    ORG_WEB          VARCHAR(64)   NOT NULL DEFAULT '' COMMENT '公司网站',
+    PROVINCE         VARCHAR(8)    NOT NULL DEFAULT '' COMMENT '区域',
+    REG_ADDRESS      VARCHAR(256)  NOT NULL DEFAULT '' COMMENT '注册地址',
+    ADDRESS          VARCHAR(256)  NOT NULL DEFAULT '' COMMENT '公司地址',
     ADDRESS_POSTCODE VARCHAR(32)   NOT NULL DEFAULT '' COMMENT '邮政编码',
     BUSINESS_SCOPE   VARCHAR(2048) NOT NULL DEFAULT '' COMMENT '业务范围',
-    CHAIRMAN         VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '董事长',
+    CHAIRMAN         VARCHAR(64)   NOT NULL DEFAULT '' COMMENT '董事长',
     INDEDIRECTORS    VARCHAR(256)  NOT NULL DEFAULT '' COMMENT '独立董事',
-    LEGAL_PERSON     VARCHAR(64)  NOT NULL DEFAULT '' COMMENT '法人',
-    REG_NUM          VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '工商登记',
+    LEGAL_PERSON     VARCHAR(64)   NOT NULL DEFAULT '' COMMENT '法人',
+    REG_NUM          VARCHAR(32)   NOT NULL DEFAULT '' COMMENT '工商登记',
     REG_CAPITAL      INT(8) COMMENT '注册资本(万元)',
-    SECUCODE         VARCHAR(10)  NOT NULL DEFAULT '' COMMENT '证券代码',
-    SECURITY_TYPE    VARCHAR(32)  NOT NULL DEFAULT '' COMMENT '证券类别',
+    SECUCODE         VARCHAR(10)   NOT NULL DEFAULT '' COMMENT '证券代码',
+    SECURITY_TYPE    VARCHAR(32)   NOT NULL DEFAULT '' COMMENT '证券类别',
     MARKET           INT(2) COMMENT '市场（0:深证A股，1:上证A股）',
     OPEN_STATUS      INT(2) NOT NULL DEFAULT 1 COMMENT '0:退市，1:正常交易',
     TYPE             INT(2) NOT NULL DEFAULT 0 COMMENT '股票类型（0:正常，1:ST）',
     LISTING_DATE     DATE COMMENT '上市日期（YYYY-MM-DD）',
-    NATION           VARCHAR(16)  NOT NULL DEFAULT '' COMMENT '国家',
-    GMT_CREATE       DATETIME              DEFAULT CURRENT_TIMESTAMP,
-    GMT_MODIFIED     DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    NATION           VARCHAR(16)   NOT NULL DEFAULT '' COMMENT '国家',
+    GMT_CREATE       DATETIME               DEFAULT CURRENT_TIMESTAMP,
+    GMT_MODIFIED     DATETIME               DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (ID),
     UNIQUE INDEX `UNQ_COMPANY_INFO_CODE`(`CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment='公司信息表';
