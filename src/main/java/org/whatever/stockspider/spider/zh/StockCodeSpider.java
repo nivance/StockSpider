@@ -28,12 +28,12 @@ public class StockCodeSpider implements Spiderable {
     private StockCodePipeline stockCodePipeline;
 
     @Override
-    public void run() {
-        new Spider(stockCodeProcessor).addPipeline(stockCodePipeline).addUrl(getUrls()).thread(8).run();
+    public void run(boolean retry) {
+        new Spider(stockCodeProcessor).addPipeline(stockCodePipeline).addUrl(getUrls(retry)).thread(8).run();
     }
 
     @Override
-    public String[] getUrls() {
+    public String[] getUrls(boolean retry) {
         long millis = System.currentTimeMillis();
         // 股票数
         int stockSize = 10000;

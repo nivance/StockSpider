@@ -37,12 +37,12 @@ public class StockHisPriceSpider implements Spiderable {
     private StockService stockService;
 
     @Override
-    public void run() {
-        new Spider(stockHisPriceProcessor).addPipeline(stockHisPricePipeline).addUrl(getUrls()).thread(8).run();
+    public void run(boolean retry) {
+        new Spider(stockHisPriceProcessor).addPipeline(stockHisPricePipeline).addUrl(getUrls(retry)).thread(8).run();
     }
 
     @Override
-    public String[] getUrls() {
+    public String[] getUrls(boolean retry) {
         List<CompanyInfo> companyInfos = stockService.getAllCompany();
         if (CollectionUtils.isEmpty(companyInfos)) {
             return new String[]{};

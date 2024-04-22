@@ -27,11 +27,11 @@ public class NewStockSpider implements Spiderable {
     @Autowired
     private StockCodePipeline stockCodePipeline;
 
-    public void run() {
-        new Spider(newStockProcessor).addPipeline(stockCodePipeline).addUrl(getUrls()).run();
+    public void run(boolean retry) {
+        new Spider(newStockProcessor).addPipeline(stockCodePipeline).addUrl(getUrls(retry)).run();
     }
 
-    public String[] getUrls() {
+    public String[] getUrls(boolean retry) {
         long millis = System.currentTimeMillis();
         String url = String.format(NEW_STOCK_API_URL, millis, millis);
         log.info("获取新股api url={}", url);

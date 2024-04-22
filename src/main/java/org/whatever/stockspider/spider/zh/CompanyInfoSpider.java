@@ -38,12 +38,12 @@ public class CompanyInfoSpider implements Spiderable {
     private CompanyInfoPipeline companyInfoPipeline;
 
     @Override
-    public void run() {
-        new Spider(companyInfoProcessor).addPipeline(companyInfoPipeline).addUrl(getUrls()).thread(4).run();
+    public void run(boolean retry) {
+        new Spider(companyInfoProcessor).addPipeline(companyInfoPipeline).addUrl(getUrls(retry)).thread(4).run();
     }
 
     @Override
-    public String[] getUrls() {
+    public String[] getUrls(boolean retry) {
         List<CompanyInfo> companyInfos = stockService.getUpupdateCompany();
         if (CollectionUtils.isEmpty(companyInfos)) {
             return new String[]{};

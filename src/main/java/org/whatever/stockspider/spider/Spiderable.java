@@ -7,12 +7,12 @@ package org.whatever.stockspider.spider;
  */
 public interface Spiderable {
 
-    void run();
+    void run(boolean retry);
 
     /**
      * 获取要爬取的链接
      *
      * @return
      */
-    String[] getUrls();
+    String[] getUrls(boolean retry);
 }
