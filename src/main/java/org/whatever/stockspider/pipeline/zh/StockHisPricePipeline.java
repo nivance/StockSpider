@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.transaction.annotation.Transactional;
 import org.whatever.stockspider.db.entity.DayPrice;
 import org.whatever.stockspider.service.StockService;
 
@@ -28,9 +29,14 @@ public class StockHisPricePipeline implements Pipeline {
     public void process(ResultItems resultItems, Task task) {
         List<DayPrice> dayPrices = resultItems.get("dataList");
         try {
-            stockService.batchInsertDayPrice(dayPrices);
+            batchInsert(dayPrices);
         } catch (Exception e) {
             log.error("", e);
         }
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    void batchInsert(List<DayPrice> dayPrices) {
+        stockService.batchInsertDayPrice(dayPrices);
     }
 }

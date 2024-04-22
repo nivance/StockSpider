@@ -63,3 +63,19 @@ CREATE TABLE `company_info`
     PRIMARY KEY (ID),
     UNIQUE INDEX `UNQ_COMPANY_INFO_CODE`(`CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment='公司信息表';
+
+-- 失败需要重试的记录
+drop table if exists fail_retry_record;
+create table fail_retry_record
+(
+    ID           BIGINT(16) AUTO_INCREMENT COMMENT '自增主键',
+    CODE         VARCHAR(8)   NOT NULL DEFAULT '' COMMENT '股票代码',
+    NAME         VARCHAR(128) NOT NULL DEFAULT '' COMMENT '股票名称',
+    TRADING_DATE VARCHAR(128) NOT NULL DEFAULT '' '交易日期（YYYY-MM-DD，多个日期逗号分隔）',
+    FAIL_TYPE    VARCHAR(10)  NOT NULL DEFAULT '' COMMENT '失败类型',
+    RETRY_SUCCES INT(2) NOT NULL DEFAULT 0 COMMENT '重试后成功（0:失败，1:成功）',
+    GMT_CREATE   DATETIME              DEFAULT CURRENT_TIMESTAMP,
+    GMT_MODIFIED DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (ID),
+    INDEX `INX_FAIL_RETRY_RECORD_CODE`(`CODE`, `RETRY_SUCCES`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment='失败需要重试的记录';

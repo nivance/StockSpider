@@ -29,8 +29,9 @@ public class SpiderRunner implements ApplicationRunner {
     @Override
     public void run(ApplicationArguments args) {
         // 初始化数据的时候使用
-        // stockCodeSpider.run();
-        // stockHisPriceSpider.run();
+        // stockCodeSpider.run(false);
+        // stockHisPriceSpider.run(false);
+        // retryStockPrice();
     }
 
 
@@ -43,7 +44,7 @@ public class SpiderRunner implements ApplicationRunner {
     @Scheduled(cron = "0 0 10 * * ?")
     public void newStock() {
         log.info("----开始爬取新股");
-        newStockSpider.run();
+        newStockSpider.run(false);
     }
 
     @Autowired
@@ -55,7 +56,7 @@ public class SpiderRunner implements ApplicationRunner {
     @Scheduled(cron = "0 0 12 * * ?")
     public void updateCompanyInfo() {
         log.info("----开始更新公司信息");
-        companyInfoSpider.run();
+        companyInfoSpider.run(false);
     }
 
     @Autowired
@@ -68,9 +69,19 @@ public class SpiderRunner implements ApplicationRunner {
     public void updateStockPrice() {
         log.info("----开始更新今天行情数据");
         if (!DateUtil.isWeekend(System.currentTimeMillis())) {
-            stockTodayPriceSpider.run();
+            stockTodayPriceSpider.run(false);
         }
     }
 
+    /**
+     * 每天 6:30, 18:30, 23:30 执行 【每天行情数据失败重查】
+     */
+    @Scheduled(cron = "0 30 6,18,23 * * ?")
+    public void retryStockPrice() {
+        log.info("----开始重试查询今天更新失败的行情数据");
+        if (!DateUtil.isWeekend(System.currentTimeMillis())) {
+            stockHisPriceSpider.run(true);
+        }
+    }
 
 }
