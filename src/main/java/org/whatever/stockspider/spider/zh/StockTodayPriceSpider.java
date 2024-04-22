@@ -1,6 +1,7 @@
 package org.whatever.stockspider.spider.zh;
 
 import java.text.MessageFormat;
+import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +9,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.whatever.stockspider.constants.StockPrefix;
 import org.whatever.stockspider.db.entity.CompanyInfo;
+import org.whatever.stockspider.listener.StockHisPriceSpiderListener;
 import org.whatever.stockspider.pipeline.zh.StockTodayPricePipeline;
 import org.whatever.stockspider.processor.zh.StockTodayPriceProcessor;
 import org.whatever.stockspider.service.StockService;
@@ -35,11 +37,17 @@ public class StockTodayPriceSpider implements Spiderable {
     @Autowired
     private StockTodayPricePipeline stockTodayPricePipeline;
     @Autowired
+    private StockHisPriceSpiderListener stockHisPriceSpiderListener;
+    @Autowired
     private StockService stockService;
 
     @Override
     public void run(boolean retry) {
-        new Spider(stockTodayPriceProcessor).addPipeline(stockTodayPricePipeline).addUrl(getUrls(retry)).thread(8).run();
+        Spider spider = new Spider(stockTodayPriceProcessor).addPipeline(stockTodayPricePipeline).addUrl(getUrls(retry)).thread(8);
+        if (retry) {
+            spider.setSpiderListeners(Arrays.asList(stockHisPriceSpiderListener));
+        }
+        spider.run();
     }
 
     @Override

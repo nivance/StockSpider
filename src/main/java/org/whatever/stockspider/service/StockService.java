@@ -44,6 +44,10 @@ public class StockService {
         dayPrices.forEach(dayPrice -> dayPriceMapper.insertSelective(dayPrice));
     }
 
+    public void insertFailRetryRecord(FailRetryRecord record) {
+        failRetryRecordMapper.insertSelective(record);
+    }
+
     public void updateCompanyInfo(CompanyInfo companyInfo) {
         CompanyInfoExample example = new CompanyInfoExample();
         example.createCriteria().andCodeEqualTo(companyInfo.getCode());
