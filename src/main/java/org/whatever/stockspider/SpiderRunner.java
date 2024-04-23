@@ -36,7 +36,7 @@ public class SpiderRunner implements ApplicationRunner {
         // stockHisPriceSpider.run(false);
         // retryStockPrice();
         // updateStockPrice();
-        stockDividentSpider.run(false);
+        // stockDividentSpider.run(false);
     }
 
 

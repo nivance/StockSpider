@@ -1,3 +1,5 @@
+package com.whatever.stockspider.util;
+
 import java.math.BigDecimal;
 import java.util.Map;
 
@@ -5,7 +7,27 @@ import org.junit.jupiter.api.Test;
 import org.springframework.util.Assert;
 import org.whatever.stockspider.util.CommonUtil;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class CommonUtilTest {
+
+    @Test
+    public void test() {
+        String key = "10派0.53元(含税,扣税后0.477元)";
+        Map<String, BigDecimal> resultMap = CommonUtil.extractNumbers(key);
+        key = "10转15.001185派1.500118元(含税,扣税后1.350106元)";
+        resultMap = CommonUtil.extractNumbers(key);
+        key = "10派2.16元(含税,扣税后1.944元)";
+        resultMap = CommonUtil.extractNumbers(key);
+        key = "10派1.514985元(含税,扣税后1.363486元)";
+        resultMap = CommonUtil.extractNumbers(key);
+        key = "10转5.00派0.22元(含税,扣税后0.198元)";
+        resultMap = CommonUtil.extractNumbers(key);
+        key = "10转8.125392派0.629717元(含税,扣税后0.566745元)";
+        resultMap = CommonUtil.extractNumbers(key);
+        log.info("{}", resultMap);
+    }
 
     @Test
     public void test1() {

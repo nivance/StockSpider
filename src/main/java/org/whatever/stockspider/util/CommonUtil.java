@@ -75,7 +75,7 @@ public class CommonUtil {
         return dayPrice;
     }
 
-    private static Pattern pattern = Pattern.compile("(?<key>[\u4e00-\u9fa5]{0,2}?)(?<value>\\d+(?:\\.\\d{1,2})?)");
+    private static Pattern pattern = Pattern.compile("(?<key>[\u4e00-\u9fa5]{0,2}?)(?<value>\\d+(?:\\.\\d+)?)");
 
     /**
      * 提取分红数值
