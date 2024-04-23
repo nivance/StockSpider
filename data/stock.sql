@@ -64,6 +64,32 @@ CREATE TABLE `company_info`
     UNIQUE INDEX `UNQ_COMPANY_INFO_CODE`(`CODE`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment='公司信息表';
 
+-- 股票分红记录表--
+-- ----------------------------
+-- Table structure for stock_dividend
+-- ----------------------------
+DROP TABLE IF EXISTS `stock_dividend`;
+CREATE TABLE `stock_dividend`
+(
+    ID                 BIGINT(16) AUTO_INCREMENT COMMENT '自增主键',
+    CODE               VARCHAR(8)    NOT NULL DEFAULT '' COMMENT '股票代码',
+    NAME               VARCHAR(128)  NOT NULL DEFAULT '' COMMENT '股票名称',
+    IMPL_PLAN_PROFILE  VARCHAR(128)  NOT NULL DEFAULT '' COMMENT '分配方案预案',
+    EQUITY_RECORD_DATE DATETIME COMMENT '股权登记日',
+    EX_DIVIDEND_DATE   DATETIME COMMENT '除权除息日',
+    NOTICE_DATE        DATETIME COMMENT '最新公告日期',
+    PLAN_NOTICE_DATE   DATETIME COMMENT '预案公告日',
+    PRETAX_BONUS_RMB   DECIMAL(6, 2) NOT NULL DEFAULT 0 COMMENT '分红金额',
+    AFTERTAX_BONUS_RMB DECIMAL(6, 2) NOT NULL DEFAULT 0 COMMENT '税后分红金额',
+    BASE_SHARE         INT(4) NOT NULL DEFAULT 0 COMMENT '基础股数（一般是10股）',
+    HANDSEL            DECIMAL(6, 2) NOT NULL DEFAULT 0 COMMENT '送',
+    TRANSFER           DECIMAL(6, 2) NOT NULL DEFAULT 0 COMMENT '转',
+    GMT_CREATE         DATETIME               DEFAULT CURRENT_TIMESTAMP,
+    GMT_MODIFIED       DATETIME               DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    PRIMARY KEY (ID),
+    UNIQUE INDEX `UNQ_STOCK_DIVIDEND_CODE_RECORD`(`CODE`, `EQUITY_RECORD_DATE`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment='股票分红记录表';
+
 -- 失败需要重试的记录
 drop table if exists fail_retry_record;
 create table fail_retry_record
@@ -77,5 +103,5 @@ create table fail_retry_record
     GMT_CREATE   DATETIME              DEFAULT CURRENT_TIMESTAMP,
     GMT_MODIFIED DATETIME              DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     PRIMARY KEY (ID),
-    INDEX `INX_FAIL_RETRY_RECORD_CODE`(`CODE`, `RETRY_SUCCES`)
+    INDEX        `INX_FAIL_RETRY_RECORD_CODE`(`CODE`, `RETRY_SUCCES`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 comment='失败需要重试的记录';

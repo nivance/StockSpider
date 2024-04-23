@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import org.whatever.stockspider.spider.zh.CompanyInfoSpider;
 import org.whatever.stockspider.spider.zh.NewStockSpider;
 import org.whatever.stockspider.spider.zh.StockCodeSpider;
+import org.whatever.stockspider.spider.zh.StockDividentSpider;
 import org.whatever.stockspider.spider.zh.StockHisPriceSpider;
 import org.whatever.stockspider.spider.zh.StockTodayPriceSpider;
 import org.whatever.stockspider.util.DateUtil;
@@ -25,6 +26,8 @@ public class SpiderRunner implements ApplicationRunner {
     private StockCodeSpider stockCodeSpider;
     @Autowired
     private StockHisPriceSpider stockHisPriceSpider;
+    @Autowired
+    private StockDividentSpider stockDividentSpider;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -33,6 +36,7 @@ public class SpiderRunner implements ApplicationRunner {
         // stockHisPriceSpider.run(false);
         // retryStockPrice();
         // updateStockPrice();
+        stockDividentSpider.run(false);
     }
 
 
@@ -83,6 +87,15 @@ public class SpiderRunner implements ApplicationRunner {
         if (!DateUtil.isWeekend(System.currentTimeMillis())) {
             stockHisPriceSpider.run(true);
         }
+    }
+
+    /**
+     * 每个月第1天执行 【分红数据爬取】
+     */
+    @Scheduled(cron = "0 0 0 1 * *")
+    public void updateStockDivident() {
+        log.info("----开始更新分红数据");
+        stockDividentSpider.run(false);
     }
 
 }

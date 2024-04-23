@@ -14,9 +14,11 @@ import org.whatever.stockspider.db.entity.CompanyInfoWithBLOBs;
 import org.whatever.stockspider.db.entity.DayPrice;
 import org.whatever.stockspider.db.entity.FailRetryRecord;
 import org.whatever.stockspider.db.entity.FailRetryRecordExample;
+import org.whatever.stockspider.db.entity.StockDividend;
 import org.whatever.stockspider.db.mapper.CompanyInfoMapper;
 import org.whatever.stockspider.db.mapper.DayPriceMapper;
 import org.whatever.stockspider.db.mapper.FailRetryRecordMapper;
+import org.whatever.stockspider.db.mapper.StockDividendMapper;
 
 /**
  * StockService
@@ -34,6 +36,8 @@ public class StockService {
     private DayPriceMapper dayPriceMapper;
     @Autowired
     private FailRetryRecordMapper failRetryRecordMapper;
+    @Autowired
+    private StockDividendMapper stockDividendMapper;
 
     @Transactional(rollbackFor = Exception.class)
     public void batchInsertCompanyInfo(List<CompanyInfo> companyInfos) {
@@ -42,6 +46,10 @@ public class StockService {
 
     public void batchInsertDayPrice(List<DayPrice> dayPrices) {
         dayPrices.forEach(dayPrice -> dayPriceMapper.insertSelective(dayPrice));
+    }
+
+    public void insertStockDividend(StockDividend stockDividend) {
+        stockDividendMapper.insertSelective(stockDividend);
     }
 
     public void insertFailRetryRecord(FailRetryRecord record) {
