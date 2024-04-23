@@ -5,6 +5,8 @@ import java.math.BigDecimal;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.whatever.stockspider.db.entity.DayPrice;
 
@@ -71,6 +73,29 @@ public class CommonUtil {
         dayPrice.setChangeAmount(new BigDecimal(split[9]));
         dayPrice.setTurnoverRate(new BigDecimal(split[10]));
         return dayPrice;
+    }
+
+    private static Pattern pattern = Pattern.compile("(?<key>[\u4e00-\u9fa5]{0,2}?)(?<value>\\d+(?:\\.\\d{1,2})?)");
+
+    /**
+     * 提取分红数值
+     * 分红表达式：10送3.50转5.00派3.00元(含税,扣税后2.40元)
+     *
+     * @param expression
+     * @return
+     */
+    public static Map<String, BigDecimal> extractNumbers(String expression) {
+        Map<String, BigDecimal> numbers = new HashMap<>();
+        // 定义正则表达式模式
+        Matcher matcher = pattern.matcher(expression);
+        int keyIndex = 1;
+        // 匹配并提取数字
+        while (matcher.find()) {
+            String key = matcher.group("key").isEmpty() ? "股" : matcher.group("key");
+            BigDecimal value = BigDecimal.valueOf(Float.valueOf(matcher.group("value")));
+            numbers.put(key, value);
+        }
+        return numbers;
     }
 
 }
