@@ -31,6 +31,9 @@ public class StockDividentProcessor extends MyPageProcessor {
         String jsonString = pageString.substring(startIndex + 1, endIndex);
         JSONObject pageJson = JSONObject.parseObject(jsonString);
         JSONObject dataJson = pageJson.getJSONObject("result");
+        if (Objects.isNull(dataJson)) {
+            return;
+        }
         JSONArray dividentArray = dataJson.getJSONArray("data");
         if (Objects.isNull(dividentArray)) {
             return;
