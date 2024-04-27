@@ -9,7 +9,6 @@ import org.springframework.util.CollectionUtils;
 import org.whatever.stockspider.constants.FailType;
 import org.whatever.stockspider.db.entity.CompanyInfo;
 import org.whatever.stockspider.db.entity.FailRetryRecord;
-import org.whatever.stockspider.listener.StockHisPriceSpiderListener;
 import org.whatever.stockspider.pipeline.zh.StockDividentPipeline;
 import org.whatever.stockspider.processor.zh.StockDividentProcessor;
 import org.whatever.stockspider.service.StockService;
@@ -36,8 +35,6 @@ public class StockDividentSpider implements Spiderable {
     private StockDividentProcessor stockDividentProcessor;
     @Autowired
     private StockDividentPipeline stockDividentPipeline;
-    @Autowired
-    private StockHisPriceSpiderListener stockHisPriceSpiderListener;
     @Autowired
     private StockService stockService;
 

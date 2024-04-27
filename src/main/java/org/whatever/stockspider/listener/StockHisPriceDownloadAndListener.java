@@ -14,6 +14,7 @@ import org.whatever.stockspider.util.DateUtil;
 import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Request;
 import us.codecraft.webmagic.SpiderListener;
+import us.codecraft.webmagic.downloader.HttpClientDownloader;
 
 /**
  * SpiderListener
@@ -22,7 +23,7 @@ import us.codecraft.webmagic.SpiderListener;
  */
 @Slf4j
 @Component
-public class StockHisPriceSpiderListener implements SpiderListener {
+public class StockHisPriceDownloadAndListener extends HttpClientDownloader implements SpiderListener {
 
     @Autowired
     private StockService stockService;
@@ -47,6 +48,9 @@ public class StockHisPriceSpiderListener implements SpiderListener {
             failRetryRecord.setFailType(FailType.DAY_PRICE.name());
             stockService.insertFailRetryRecord(failRetryRecord);
         } else {
+            if (!failRetryRecord.getTradingDate().contains(today)) {
+                return;
+            }
             failRetryRecord.setTradingDate(String.join(",", failRetryRecord.getTradingDate(), today));
             failRetryRecord.setCode(null);
             failRetryRecord.setName(null);
