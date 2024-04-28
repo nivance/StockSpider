@@ -76,6 +76,10 @@ public class StockService {
         return customMapper.selectUnupdateCompanys();
     }
 
+    public List<CompanyInfo> getEmptyListingDate() {
+        return customMapper.selectEmptyListingDate();
+    }
+
     public List<FailRetryRecord> getFailRecord(FailType failType) {
         FailRetryRecordExample example = new FailRetryRecordExample();
         example.createCriteria().andFailTypeEqualTo(failType.name()).andRetrySuccesEqualTo(0);

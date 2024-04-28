@@ -23,5 +23,12 @@ public interface CustomMapper {
     })
     List<CompanyInfo> selectUnupdateCompanys();
 
+    @Select({
+            "select CODE from company_info where LISTING_DATE is null"
+    })
+    @Results({
+            @Result(column = "CODE", property = "code", jdbcType = JdbcType.VARCHAR),
+    })
+    List<CompanyInfo> selectEmptyListingDate();
 
 }

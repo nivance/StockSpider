@@ -6,6 +6,7 @@ import org.springframework.boot.ApplicationRunner;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.whatever.stockspider.spider.zh.CompanyInfoSpider;
+import org.whatever.stockspider.spider.zh.IssueRelatedSpider;
 import org.whatever.stockspider.spider.zh.NewStockSpider;
 import org.whatever.stockspider.spider.zh.StockCodeSpider;
 import org.whatever.stockspider.spider.zh.StockDividentSpider;
@@ -28,6 +29,8 @@ public class SpiderRunner implements ApplicationRunner {
     private StockHisPriceSpider stockHisPriceSpider;
     @Autowired
     private StockDividentSpider stockDividentSpider;
+    @Autowired
+    private IssueRelatedSpider issueRelatedSpider;
 
     @Override
     public void run(ApplicationArguments args) {
@@ -37,6 +40,7 @@ public class SpiderRunner implements ApplicationRunner {
         // retryStockPrice();
         // updateStockPrice();
         // stockDividentSpider.run(false);
+        issueRelatedSpider.run(false);
     }
 
 
@@ -62,6 +66,15 @@ public class SpiderRunner implements ApplicationRunner {
     public void updateCompanyInfo() {
         log.info("----开始更新公司信息");
         companyInfoSpider.run(false);
+    }
+
+    /**
+     * 每天 14:00 执行 【更新公司发行信息】
+     */
+    @Scheduled(cron = "0 0 14 * * ?")
+    public void updateCompanyIssueRelated() {
+        log.info("----开始更新公司发行信息");
+        issueRelatedSpider.run(false);
     }
 
     @Autowired

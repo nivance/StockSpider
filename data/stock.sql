@@ -56,6 +56,7 @@ CREATE TABLE `company_info`
     MARKET           INT(2) COMMENT '市场（0:深证A股，1:上证A股）',
     OPEN_STATUS      INT(2) NOT NULL DEFAULT 1 COMMENT '0:退市，1:正常交易',
     TYPE             INT(2) NOT NULL DEFAULT 0 COMMENT '股票类型（0:正常，1:ST）',
+    ESTABLISH_DATE   DATE COMMENT '成立日期（YYYY-MM-DD）',
     LISTING_DATE     DATE COMMENT '上市日期（YYYY-MM-DD）',
     NATION           VARCHAR(16)   NOT NULL DEFAULT '' COMMENT '国家',
     GMT_CREATE       DATETIME               DEFAULT CURRENT_TIMESTAMP,

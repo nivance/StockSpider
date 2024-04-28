@@ -73,11 +73,30 @@ public enum StockPrefix {
         if (sp.isPresent()) {
             return sp.get().getMarket();
         }
-        log.error("code={}没有匹配到交易所编号");
+        log.error("code={}没有匹配到交易所编号", code);
         return 0;
+    }
+
+    /**
+     * 根据代码取交易所代码
+     *
+     * @param code
+     * @return
+     */
+    public static String getMarketCode(String code) {
+        Optional<StockPrefix> sp = Arrays.stream(StockPrefix.values()).filter(p -> p.getCodePrefixs().contains(code.substring(0, 2))).findFirst();
+        if (sp.isPresent()) {
+            return sp.get().name();
+        }
+        log.error("code={}没有匹配到交易所代码", code);
+        return SZ.name();
     }
 
     public static String toMartetCode(String code) {
         return getMarket(code) + "." + code;
+    }
+
+    public static String reverseMartetCode(String code) {
+        return String.join(".", code, getMarketCode(code));
     }
 }
