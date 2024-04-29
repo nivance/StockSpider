@@ -33,12 +33,10 @@ public class StockTodayPriceProcessor extends MyPageProcessor {
         JSONObject pageJson = JSONObject.parseObject(jsonString);
         JSONObject dataJson = pageJson.getJSONObject("data");
         log.info("爬取url={} ===>>> 结果数据={}", url, dataJson);
-//        String code = dataJson.getString("f57");
-//        String name = dataJson.getString("f58");
         String code = dataJson.getString("code");
         String name = dataJson.getString("name");
         JSONArray klinesArray = dataJson.getJSONArray("klines");
-        if (Objects.isNull(klinesArray)) {
+        if (Objects.isNull(klinesArray) || klinesArray.size() == 0) {
             return;
         }
         // 最后那条数据是当天的
