@@ -32,7 +32,7 @@ public class StockHisPricePipeline implements Pipeline {
         try {
             batchInsert(dayPrices);
         } catch (DuplicateKeyException e) {
-            log.info("{}", e.getCause(), e);
+            log.info("", e);
         } catch (Exception e) {
             log.error("", e);
         }

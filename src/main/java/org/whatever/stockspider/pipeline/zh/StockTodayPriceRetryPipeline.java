@@ -5,6 +5,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.whatever.stockspider.constants.FailType;
@@ -41,6 +42,8 @@ public class StockTodayPriceRetryPipeline implements Pipeline {
         dayPrices = dayPrices.stream().filter(d -> failRetryRecord.getTradingDate().contains(DateUtil.formatDate(d.getTradingDate().getTime()))).collect(Collectors.toList());
         try {
             updateData(dayPrices, failRetryRecord);
+        } catch (DuplicateKeyException e) {
+            log.info("", e);
         } catch (Exception e) {
             log.error("", e);
         }

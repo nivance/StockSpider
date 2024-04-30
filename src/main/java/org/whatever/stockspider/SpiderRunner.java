@@ -40,7 +40,7 @@ public class SpiderRunner implements ApplicationRunner {
         // retryStockPrice();
         // updateStockPrice();
         // stockDividentSpider.run(false);
-        issueRelatedSpider.run(false);
+        // issueRelatedSpider.run(false);
     }
 
 
@@ -98,7 +98,7 @@ public class SpiderRunner implements ApplicationRunner {
     public void retryStockPrice() {
         log.info("----开始重试查询今天更新失败的行情数据");
         if (!DateUtil.isWeekend(System.currentTimeMillis())) {
-            stockHisPriceSpider.run(true);
+            stockTodayPriceSpider.run(true);
         }
     }
 

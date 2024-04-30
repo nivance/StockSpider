@@ -7,12 +7,9 @@ import java.util.stream.Collectors;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
-import org.whatever.stockspider.constants.FailType;
 import org.whatever.stockspider.constants.StockPrefix;
 import org.whatever.stockspider.db.entity.CompanyInfo;
-import org.whatever.stockspider.db.entity.FailRetryRecord;
 import org.whatever.stockspider.pipeline.zh.StockHisPricePipeline;
-import org.whatever.stockspider.pipeline.zh.StockTodayPriceRetryPipeline;
 import org.whatever.stockspider.processor.zh.StockHisPriceProcessor;
 import org.whatever.stockspider.service.StockService;
 import org.whatever.stockspider.spider.Spiderable;
@@ -40,34 +37,23 @@ public class StockHisPriceSpider implements Spiderable {
     @Autowired
     private StockHisPricePipeline stockHisPricePipeline;
     @Autowired
-    private StockTodayPriceRetryPipeline stockTodayPriceRetryPipeline;
-    @Autowired
     private StockService stockService;
 
     @Override
     public void run(boolean retry) {
-        Pipeline pipeline = retry ? stockTodayPriceRetryPipeline : stockHisPricePipeline;
+        Pipeline pipeline = stockHisPricePipeline;
         new Spider(stockHisPriceProcessor).addPipeline(pipeline).addUrl(getUrls(retry)).thread(8).run();
     }
 
     @Override
     public String[] getUrls(boolean retry) {
         List<String> codes = null;
-        if (retry) {
-            // 重试时取失败记录表代码
-            List<FailRetryRecord> failRetryRecords = stockService.getFailRecord(FailType.DAY_PRICE);
-            if (CollectionUtils.isEmpty(failRetryRecords)) {
-                return new String[]{};
-            }
-            codes = failRetryRecords.stream().map(FailRetryRecord::getCode).collect(Collectors.toList());
-        } else {
-            // 取全部股票代码
-            List<CompanyInfo> companyInfos = stockService.getAllCompany();
-            if (CollectionUtils.isEmpty(companyInfos)) {
-                return new String[]{};
-            }
-            codes = companyInfos.stream().map(CompanyInfo::getCode).collect(Collectors.toList());
+        // 取全部股票代码
+        List<CompanyInfo> companyInfos = stockService.getAllCompany();
+        if (CollectionUtils.isEmpty(companyInfos)) {
+            return new String[]{};
         }
+        codes = companyInfos.stream().map(CompanyInfo::getCode).collect(Collectors.toList());
         return codes.stream().map(c -> getStockPriceApiUrl(c, retry)).toArray(String[]::new);
     }
 
