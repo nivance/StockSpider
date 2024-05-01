@@ -1,6 +1,7 @@
 package org.whatever.stockspider.spider.zh;
 
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -9,6 +10,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.whatever.stockspider.constants.StockPrefix;
 import org.whatever.stockspider.db.entity.CompanyInfo;
+import org.whatever.stockspider.db.entity.StockDividend;
 import org.whatever.stockspider.pipeline.zh.StockHisPricePipeline;
 import org.whatever.stockspider.processor.zh.StockHisPriceProcessor;
 import org.whatever.stockspider.service.StockService;
@@ -17,7 +19,6 @@ import org.whatever.stockspider.util.DateUtil;
 
 import lombok.extern.slf4j.Slf4j;
 import us.codecraft.webmagic.Spider;
-import us.codecraft.webmagic.pipeline.Pipeline;
 
 /**
  * 股票历史价格爬虫
@@ -39,31 +40,42 @@ public class StockHisPriceSpider implements Spiderable {
     @Autowired
     private StockService stockService;
 
+    /**
+     * @param retry : true(从stock_dividend取数)；false(从company_info取数)
+     */
     @Override
     public void run(boolean retry) {
-        Pipeline pipeline = stockHisPricePipeline;
-        new Spider(stockHisPriceProcessor).addPipeline(pipeline).addUrl(getUrls(retry)).thread(8).run();
+        new Spider(stockHisPriceProcessor).addPipeline(stockHisPricePipeline).addUrl(getUrls(retry)).thread(8).run();
     }
 
     @Override
     public String[] getUrls(boolean retry) {
         List<String> codes = null;
-        // 取全部股票代码
-        List<CompanyInfo> companyInfos = stockService.getAllCompany();
-        if (CollectionUtils.isEmpty(companyInfos)) {
-            return new String[]{};
+        if (retry) {
+            // 因为我们每天爬的价格是复权后的价格，每个除权除息日价格会发生变化，所以要重新拉全部历史价格
+             Date date = new Date();
+            // 查当天除权除息日股票
+            List<StockDividend> stockDividends = stockService.getStockDividend(DateUtil.cutTail(date));
+            if (CollectionUtils.isEmpty(stockDividends)) {
+                return new String[]{};
+            }
+            codes = stockDividends.stream().map(StockDividend::getCode).collect(Collectors.toList());
+        } else {
+            // 取全部股票代码
+            List<CompanyInfo> companyInfos = stockService.getAllCompany();
+            if (CollectionUtils.isEmpty(companyInfos)) {
+                return new String[]{};
+            }
+            codes = companyInfos.stream().map(CompanyInfo::getCode).collect(Collectors.toList());
         }
-        codes = companyInfos.stream().map(CompanyInfo::getCode).collect(Collectors.toList());
         return codes.stream().map(c -> getStockPriceApiUrl(c, retry)).toArray(String[]::new);
     }
 
     protected String getStockPriceApiUrl(String code, boolean retry) {
         Long millis = System.currentTimeMillis();
-        long limit = retry ? 10 : 1000000;
-        // 10天前的日期
-        String day = DateUtil.formatDate(millis - 10 * DateUtil.DAY_MILLIS, DateUtil.FORMAT_4);
-        String begin = retry ? day : "0";
-        return MessageFormat.format(STOCK_HIS_PRICE_API_URL, millis.toString(), StockPrefix.toMartetCode(code), begin, limit, millis.toString());
+        Long limit = 1000000L;
+        String begin = "0";
+        return MessageFormat.format(STOCK_HIS_PRICE_API_URL, millis.toString(), StockPrefix.toMartetCode(code), begin, limit.toString(), millis.toString());
     }
 
 }

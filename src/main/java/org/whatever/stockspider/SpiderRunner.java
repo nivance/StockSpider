@@ -111,4 +111,15 @@ public class SpiderRunner implements ApplicationRunner {
         stockDividentSpider.run(false);
     }
 
+    /**
+     * 每天 21:30 执行 【查今天是否有除权除息的股票，如果有，价格需要重新取】
+     */
+    @Scheduled(cron = "0 30 21 * * ?")
+    public void updateStockDividentPrice() {
+        log.info("----开始查询除权除息行情数据");
+        if (!DateUtil.isWeekend(System.currentTimeMillis())) {
+            stockHisPriceSpider.run(true);
+        }
+    }
+
 }

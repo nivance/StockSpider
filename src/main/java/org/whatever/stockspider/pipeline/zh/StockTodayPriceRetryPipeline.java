@@ -43,7 +43,7 @@ public class StockTodayPriceRetryPipeline implements Pipeline {
         try {
             updateData(dayPrices, failRetryRecord);
         } catch (DuplicateKeyException e) {
-            log.info("", e);
+            log.info("{}", e.getCause());
         } catch (Exception e) {
             log.error("", e);
         }

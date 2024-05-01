@@ -1,5 +1,6 @@
 package org.whatever.stockspider.service;
 
+import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +13,11 @@ import org.whatever.stockspider.db.entity.CompanyInfo;
 import org.whatever.stockspider.db.entity.CompanyInfoExample;
 import org.whatever.stockspider.db.entity.CompanyInfoWithBLOBs;
 import org.whatever.stockspider.db.entity.DayPrice;
+import org.whatever.stockspider.db.entity.DayPriceExample;
 import org.whatever.stockspider.db.entity.FailRetryRecord;
 import org.whatever.stockspider.db.entity.FailRetryRecordExample;
 import org.whatever.stockspider.db.entity.StockDividend;
+import org.whatever.stockspider.db.entity.StockDividendExample;
 import org.whatever.stockspider.db.mapper.CompanyInfoMapper;
 import org.whatever.stockspider.db.mapper.DayPriceMapper;
 import org.whatever.stockspider.db.mapper.FailRetryRecordMapper;
@@ -46,6 +49,12 @@ public class StockService {
 
     public void batchInsertDayPrice(List<DayPrice> dayPrices) {
         dayPrices.forEach(dayPrice -> dayPriceMapper.insertSelective(dayPrice));
+    }
+
+    public int delete(String code) {
+        DayPriceExample example = new DayPriceExample();
+        example.createCriteria().andCodeEqualTo(code);
+        return dayPriceMapper.deleteByExample(example);
     }
 
     public void insertStockDividend(StockDividend stockDividend) {
@@ -91,6 +100,13 @@ public class StockService {
         example.createCriteria().andCodeEqualTo(code).andFailTypeEqualTo(failType.name()).andRetrySuccesEqualTo(succes);
         List<FailRetryRecord> failRetryRecords = failRetryRecordMapper.selectByExample(example);
         return CollectionUtils.isEmpty(failRetryRecords) ? null : failRetryRecords.get(0);
+    }
+
+    public List<StockDividend> getStockDividend(Date date) {
+        StockDividendExample example = new StockDividendExample();
+        // Date date1 = DateUtil.formatDate("2024-04-18", DateUtil.FORMAT_3).toDate();
+        example.createCriteria().andExDividendDateEqualTo(date);
+        return stockDividendMapper.selectByExample(example);
     }
 
 }

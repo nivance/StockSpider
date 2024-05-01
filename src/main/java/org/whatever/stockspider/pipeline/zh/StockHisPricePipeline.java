@@ -32,7 +32,7 @@ public class StockHisPricePipeline implements Pipeline {
         try {
             batchInsert(dayPrices);
         } catch (DuplicateKeyException e) {
-            log.info("", e);
+            log.info("{}", e.getCause());
         } catch (Exception e) {
             log.error("", e);
         }
@@ -40,6 +40,8 @@ public class StockHisPricePipeline implements Pipeline {
 
     @Transactional(rollbackFor = Exception.class)
     void batchInsert(List<DayPrice> dayPrices) {
+        // 如果有历史数据，需要将历史数据删除
+        stockService.delete(dayPrices.get(0).getCode());
         stockService.batchInsertDayPrice(dayPrices);
     }
 }
