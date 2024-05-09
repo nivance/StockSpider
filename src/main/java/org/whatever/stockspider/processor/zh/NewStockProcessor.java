@@ -1,7 +1,6 @@
 package org.whatever.stockspider.processor.zh;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
@@ -36,7 +35,6 @@ public class NewStockProcessor extends MyPageProcessor {
         log.info("新股爬取结果={}", jsonString);
         JSONArray dataList = JSONArray.parseArray(jsonString);
         List<CompanyInfo> companyInfos = new ArrayList<>();
-        Date date = new Date();
         String today = DateUtil.formatDate(System.currentTimeMillis(), DateUtil.FORMAT_4);
         for (int i = 0; i < dataList.size(); i++) {
             JSONObject data = dataList.getJSONObject(i);
@@ -45,7 +43,7 @@ public class NewStockProcessor extends MyPageProcessor {
                 CompanyInfoWithBLOBs companyInfo = new CompanyInfoWithBLOBs();
                 companyInfo.setCode(data.getString("f12"));
                 companyInfo.setName(data.getString("f14"));
-                companyInfo.setListingDate(date);
+                companyInfo.setOrgProfile("");
                 companyInfos.add(companyInfo);
             }
         }
